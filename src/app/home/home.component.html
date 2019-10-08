@@ -1,0 +1,171 @@
+<nav class="navbar navbar-dark">
+  <a class="navbar-brand">NutriPos System Dashboard</a>
+  <button class="btn  my-2 my-sm-0" (click)="onLogout()">Logout</button>
+</nav>
+
+<div class="container">
+  <h3 class="welcome">Welcome back {{ username }}!</h3>
+
+  <ng-container [ngSwitch]="typeid">
+    <div *ngSwitchCase="1">
+      <p class="title">Search Recipes by Nutritional Information</p>
+
+      <form
+        #Nutritionalform="ngForm"
+        class="mb-4"
+        autocomplete="off"
+        (submit)="onSubmitNutritional(Nutritionalform)"
+      >
+        <label>Enter The Amount of carbs</label>
+
+        <div class="form-row">
+          <div class="col">
+            <input
+              class="form-control"
+              #Nutritional="ngModel"
+              name="minCarbs"
+              [(ngModel)]="NutritionalFormModel.minCarbs"
+              placeholder="Minimum Carbs"
+              required
+            />
+          </div>
+          <div class="col">
+            <input
+              class="form-control"
+              #Nutritional="ngModel"
+              name="maxCarbs"
+              [(ngModel)]="NutritionalFormModel.maxCarbs"
+              placeholder="Maximum Carbs"
+              required
+            />
+          </div>
+        </div>
+
+        <label>Enter The Amount of Calories</label>
+
+        <div class="form-row">
+          <div class="col">
+            <input
+              class="form-control"
+              #Nutritional="ngModel"
+              name="minCalories"
+              [(ngModel)]="NutritionalFormModel.minCalories"
+              placeholder="Minimum Calories"
+              required
+            />
+          </div>
+          <div class="col">
+            <input
+              class="form-control"
+              #Nutritional="ngModel"
+              name="maxCalories"
+              [(ngModel)]="NutritionalFormModel.maxCalories"
+              placeholder="Maximum Calories"
+              required
+            />
+          </div>
+        </div>
+
+
+        <div class="form-row button">
+          <button
+            type="submit"
+            class="btn  btn-block"
+            [disabled]="Nutritionalform.invalid"
+          >
+          <span *ngIf="!searching"> Search </span>
+          <div *ngIf="searching" class="text-center">
+             <div class="spinner-border" role="status"></div>
+         </div>  
+          </button>
+        </div>
+      </form>
+      <div class="card m-3" *ngIf="results?.length">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Recipe</th>
+                <th scope="col">Calories</th>
+                <th scope="col">Carbs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let result of results">
+                <td>{{ result.title }}</td>
+                <td>{{ result.calories }}</td>
+                <td>{{ result.carbs }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+
+    <div *ngSwitchCase="2">
+      <p class="title">Search Recipes by Ingredients</p>
+
+      <form
+        #Ingredientsform="ngForm"
+        class="mb-4"
+        autocomplete="off"
+        (submit)="onSubmitIngredients(Ingredientsform)"
+      >
+        <div class="form-group">
+          <label>Enter Ingredients</label>
+          <input
+            class="form-control"
+            #Ingredients="ngModel"
+            name="Ingredients"
+            [(ngModel)]="IngredientsFormModel.Ingredients"
+            required
+          />
+        </div>
+
+        <div class="form-row button">
+          <button
+            type="submit"
+            class="btn  btn-block"
+            [disabled]="Ingredientsform.invalid"
+          >
+           <span *ngIf="!searching"> Search </span>
+           <div *ngIf="searching" class="text-center">
+              <div class="spinner-border" role="status"></div>
+          </div>   
+          </button>
+        </div>
+      </form>
+
+      <div class="card m-3" *ngIf="results?.length">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Recipe</th>
+                <th scope="col">Serves</th>
+                <th scope="col">ready In</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let result of results">
+                <td>{{ result.title }}</td>
+                <td>{{ result.servings }}</td>
+                <td>{{ result.readyInMinutes }} Minutes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+    </div>
+
+    <!--default case when there are no matches -->
+    <div *ngSwitchDefault>
+      <p>Oops! An error occured.</p>
+    </div>
+  </ng-container>
+
+
+
+  <div class="card m-3" *ngIf="!results?.length && results">
+    <p style="text-align: center; padding-top : 3px;">
+      No Recipes found
+    </p>
+  </div>
+</div>
